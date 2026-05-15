@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sora:wght@100..800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --foreground-muted: #8a8a8a;
+
+  --border-subtle: #262626;
+  --border-strong: #404040;
+
+  --primary: #9d3cf8;
+  --success: #10b981;
+  --warning: #ef4444;
+  --info: #3b82f6;
+
+  --font-sora: "Sora", sans-serif;
+  --font-inter: "Inter", ui-sans-serif, system-ui;  
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-subtle: var(--border-subtle);
+  --color-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --font-sora: var(--font-sora);
+  --font-inter: var(--font-inter);
+}
+
+@layer base {
+  body {
+    font-family: var(--font-inter);
+    @apply bg-background text-foreground;
+  }
+
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--background) inset !important;
+    -webkit-text-fill-color:var(--foreground) !important;
+}
