@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   className?: string;
-  variant?: "default" | "outline" | "ghost" | "primary";
+  variant?: "default" | "outline" | "ghost" | "primary" | "danger";
   size?: "sm" | "md" | "lg" | "icon";
   loading?: boolean;
 }
@@ -17,7 +17,8 @@ const Button = ({ children, className, variant = 'default', size = "md", loading
     default: "bg-foreground text-background ",
     outline: "bg-transparent text-foreground border border-subtle",
     ghost: "bg-transparent text-foreground border-0",
-    primary: "bg-primary/90 text-white border-0"
+    primary: "bg-primary/90 text-white border-0",
+    danger: "bg-warning text-foreground border-0",
   };
   const sizeStyle = {
     sm: "h-9 px-3 text-sm",

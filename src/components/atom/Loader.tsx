@@ -1,9 +1,10 @@
+import { Loader2 } from 'lucide-react'
 import React from 'react'
 
 const Loader = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="flex items-center justify-center gap-2">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <Loader2 className='animate-spin' />
       {children && <span className="text-sm">{children}</span>}
     </div>
   )

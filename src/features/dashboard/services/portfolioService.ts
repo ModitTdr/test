@@ -1,14 +1,15 @@
 import { db, auth } from "@/features/authentication/firebase/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore";
 import type { CoinSearchResponse } from "../types/coinResponseType";
 import type { PortfolioItem } from "../types/coinPortfolio";
 
 
 export const addCoinToPortfolio = async (coin: CoinSearchResponse, amount: number) => {
+  console.log('addgin portfolio')
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
-  const portfolioRef = collection(db, "users", user.uid, "portfolio");
+  const docRef = doc(db, "users", user.uid, "portfolio", coin.id);
 
   const data = {
     coinId: coin.id,
@@ -18,17 +19,29 @@ export const addCoinToPortfolio = async (coin: CoinSearchResponse, amount: numbe
     amount: amount,
   };
 
-  await addDoc(portfolioRef, data);
+  await setDoc(docRef, data);
 };
 
 export const getPortfolio = async () => {
+  console.log('getting portfolio')
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
   const portfolioRef = collection(db, "users", user.uid, "portfolio");
-  const querySnapshot = await getDocs(portfolioRef);
+  const res = await getDocs(portfolioRef);
 
-  return querySnapshot.docs.map(doc => ({
+  if (res.empty) return [];
+  return res.docs.map(doc => ({
+    id: doc.id,
     ...doc.data()
   })) as PortfolioItem[];
 };
+
+export const removePortfolio = async (coinId: string) => {
+  console.log('removing portfolio')
+  const user = auth.currentUser;
+  if (!user) throw new Error("User not authenticated");
+
+  const portfolioRef = doc(db, "users", user.uid, "portfolio", coinId);
+  await deleteDoc(portfolioRef);
+}

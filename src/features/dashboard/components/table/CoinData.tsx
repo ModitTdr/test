@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface CoinDataProps {
   image: string;
   name: string;
@@ -21,4 +23,4 @@ const CoinData = ({ image, name, symbol }: CoinDataProps) => {
   )
 }
 
-export default CoinData
+export default memo(CoinData)

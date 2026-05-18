@@ -1,4 +1,5 @@
-import { useCoinQuery } from "../hooks/useCoinQuery"
+import { useMemo } from "react";
+import { useCoinQuery } from "../hooks/useCoinQueries"
 import { Table, TableBody, TableEmptyState, TableHead, TableHeader, TableRow } from "@/components/atom/Table";
 import CoinRow from "../components/table/CoinRow";
 import type { CoinResponseType } from "../types/coinResponseType";
@@ -6,7 +7,9 @@ import CoinCard from "../components/CoinCard";
 
 const Dashboard = () => {
   const { data, isLoading, currency } = useCoinQuery();
-  const topData = data?.slice(0, 3);
+  const topData = useMemo(() => data?.slice(0, 3), [data]);
+
+  console.log('dashboard rendered');
 
   return (
     <section className="space-y-10 overflow-hidden">
@@ -24,14 +27,16 @@ const Dashboard = () => {
         </h1>
         <div className="flex justify-evenly items-center gap-4 pt-35">
           {topData &&
-            topData.map((coin, index) => (
-              <CoinCard
-                key={index}
-                data={coin}
-                index={index}
-                currencyType={currency}
-              />
-            ))
+            topData.map((coin, index) => {
+              return (
+                <CoinCard
+                  key={coin.id}
+                  data={coin}
+                  index={index}
+                  currencyType={currency}
+                />
+              )
+            })
           }
         </div>
       </div>
@@ -42,7 +47,9 @@ const Dashboard = () => {
             <TableRow>
               <TableHead>Index</TableHead>
               <TableHead>Coin</TableHead>
-              <TableHead className="text-right">Valuation</TableHead>
+              <TableHead>Valuation</TableHead>
+              <TableHead>Total Volume</TableHead>
+              <TableHead className="text-right">Market Change (24h)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -50,7 +57,7 @@ const Dashboard = () => {
               data.map((coin: CoinResponseType, index: number) => {
                 return (
                   <CoinRow
-                    key={index}
+                    key={coin.id}
                     data={coin}
                     index={index}
                     currency={currency}

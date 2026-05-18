@@ -7,7 +7,7 @@ import type { RegisterSchema } from "../schema/registerSchema";
 export const signIn = async (data: LoginSchema) => {
   const { email, password } = data;
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth, email, password)
     toast.success('Login successful');
 
   } catch (error) {
@@ -35,7 +35,7 @@ export const logOut = async () => {
 export const signUp = async (data: RegisterSchema) => {
   const { email, password } = data;
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
+    await createUserWithEmailAndPassword(auth, email, password)
     toast.success('User Registered');
 
   } catch (error) {

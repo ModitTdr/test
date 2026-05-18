@@ -1,5 +1,5 @@
 import Button from "@/components/atom/Button"
-import { Plus } from "lucide-react"
+import { Plus, Trash } from "lucide-react"
 import { useState } from "react"
 import { AddCoinModal } from "../components/portfolio/addCoinModal"
 import { useQuery } from "@tanstack/react-query"
@@ -9,9 +9,15 @@ import Loader from "@/components/atom/Loader"
 import { usePortfolioValue } from "../hooks/usePortfolioValues"
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/atom/Table"
+import DeleteCoinModal from "../components/portfolio/deleteCoinModal"
 
 const Portfolio = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState({
+    open: false,
+    id: null,
+    coinName: null,
+  });
 
   const { data: portfolio, isLoading } = useQuery({
     queryKey: ['portfolio'],
@@ -19,13 +25,21 @@ const Portfolio = () => {
   })
   const { totalValue, prices, currency } = usePortfolioValue(portfolio);
 
+  const handleDelete = (id: string, coinName: string) => {
+    setIsDeleteModalOpen({
+      open: true,
+      id,
+      coinName
+    })
+  }
+
   return (
     <section className="p-6 md:p-10">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <p className="text-foreground-muted">Your Balance:</p>
           <h1 className="text-6xl font-sora">
-            {getCurrencySymbol(currency)}{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {getCurrencySymbol(currency)}{totalValue.toLocaleString()}
           </h1>
         </div>
         <Button
@@ -66,9 +80,14 @@ const Portfolio = () => {
                         <p className="font-semibold">{coin.amount} {coin.symbol.toUpperCase()}</p>
                       </TableCell>
                       <TableCell className="text-right">
-                        <p className="font-medium">
-                          {getCurrencySymbol(currency)}{holdingValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </p>
+                        <div className="flex justify-end items-center gap-3">
+                          <p className="font-medium">
+                            {getCurrencySymbol(currency)}{holdingValue.toLocaleString()}
+                          </p>
+                          <Button variant="ghost" size="icon" className="cursor-pointer text-red-500" onClick={() => handleDelete(coin.id, coin.name)}>
+                            <Trash size={18} />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )
@@ -82,6 +101,12 @@ const Portfolio = () => {
       {isModalOpen && (
         <AddCoinModal onClose={() => setIsModalOpen(false)} />
       )}
+      {isDeleteModalOpen.open &&
+        <DeleteCoinModal
+          delState={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen({ open: false, id: null, coinName: null })}
+        />
+      }
     </section>
   )
 }

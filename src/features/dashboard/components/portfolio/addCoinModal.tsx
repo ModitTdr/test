@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { X, ArrowLeft } from "lucide-react"
 import Button from "@/components/atom/Button"
 import Input from "@/components/atom/Input"
-import { useSearchCoin } from "../../hooks/useSearchCoin"
 import { useDebounce } from "@/hooks/useDebounce"
 import type { CoinSearchResponse } from "../../types/coinResponseType"
 import { addCoinToPortfolio } from "../../services/portfolioService"
@@ -11,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import CoinData from '../table/CoinData'
 import { Modal, ModalBody, ModalClose, ModalFooter, ModalHeader, ModalTitle } from '@/components/atom/Modal'
 import Loader from '@/components/atom/Loader'
+import { useSearchCoin } from '../../hooks/useCoinQueries'
 
 interface AddCoinModalProps {
   onClose: () => void;
@@ -68,7 +68,6 @@ export const AddCoinModal = ({ onClose }: AddCoinModalProps) => {
               <ArrowLeft size={18} />
             </Button>
           )}
-
           <ModalTitle>Add Coin</ModalTitle>
         </div>
 

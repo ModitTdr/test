@@ -4,7 +4,6 @@ import { logOut } from "@/features/authentication/services/authService";
 import Button from "../atom/Button";
 import { useCurrency, type Currency } from "@/context/CurrencyContext";
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import { Modal, ModalBody, ModalClose, ModalHeader, ModalTitle } from "../atom/Modal";
 
 const Navbar = () => {
@@ -26,7 +25,7 @@ const Navbar = () => {
   return (
     <header className="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
       <nav className="h-15 flex items-center justify-between px-10 border-b border-black/5">
-        <Link to="/" className="font-bold tracking-[0.2em] uppercase flex items-center gap-2 font-sora hover:text-primary transition-all duration-150">
+        <Link to="/dashboard" className="font-bold tracking-[0.2em] uppercase flex items-center gap-2 font-sora hover:text-primary transition-all duration-150">
           <Activity size={18} />
           Crypto<span className="opacity-30 -ml-2 font-sora">Pulse</span>
         </Link>
@@ -65,7 +64,7 @@ const Navbar = () => {
             </Button>
 
             {isCurrencyOpen &&
-              createPortal(
+              (
                 <Modal className="max-w-xs border-black/10 bg-background">
                   <ModalHeader className="mb-0 border-none pb-0">
                     <ModalTitle className="text-lg font-semibold">Select Currency</ModalTitle>
@@ -95,8 +94,7 @@ const Navbar = () => {
                       ))}
                     </div>
                   </ModalBody>
-                </Modal>,
-                document.body
+                </Modal>
               )}
 
           </div>

@@ -1,6 +1,7 @@
 import Button from "./Button";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -10,15 +11,16 @@ export const Modal = ({
   children,
   className,
 }: ModalProps) => {
-  return (
-    <>
-      <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  return createPortal(
+    <div className="absolute top-0 left-0 w-full h-screen">
+      <div className="absolute inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
         <div className={twMerge(clsx("w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 shadow-2xl", className))}>
           {children}
         </div>
       </div>
-    </>
+    </div>,
+    document.body
   );
 };
 
