@@ -5,7 +5,6 @@ import type { PortfolioItem } from "../types/coinPortfolio";
 
 
 export const addCoinToPortfolio = async (coin: CoinSearchResponse, amount: number) => {
-  console.log('addgin portfolio')
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
@@ -23,7 +22,6 @@ export const addCoinToPortfolio = async (coin: CoinSearchResponse, amount: numbe
 };
 
 export const getPortfolio = async () => {
-  console.log('getting portfolio')
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
@@ -38,10 +36,16 @@ export const getPortfolio = async () => {
 };
 
 export const removePortfolio = async (coinId: string) => {
-  console.log('removing portfolio')
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
   const portfolioRef = doc(db, "users", user.uid, "portfolio", coinId);
   await deleteDoc(portfolioRef);
 }
+
+export const updatePortfolioCoin = async (coinId: string, amount: number) => {
+  const user = auth.currentUser;
+  if (!user) throw new Error("User not authenticated");
+  const docRef = doc(db, "users", user.uid, "portfolio", coinId);
+  await setDoc(docRef, { amount }, { merge: true });
+};

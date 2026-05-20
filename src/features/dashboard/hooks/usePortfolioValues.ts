@@ -12,7 +12,6 @@ export const usePortfolioValue = (portfolio: PortfolioItem[] | undefined) => {
     queryFn: () => getCoinPrices(coinIds, currency),
     enabled: coinIds.length > 0,
     refetchOnWindowFocus: false,
-    staleTime: 15000,
     refetchInterval: 15000,
     placeholderData: keepPreviousData,
   });

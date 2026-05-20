@@ -1,15 +1,14 @@
-import type { CoinResponseType } from '../types/coinResponseType';
 import { getCurrencySymbol } from '@/utils/getCurrencySymbol';
 import Badge from '@/components/atom/Badge';
-import { Card } from '@/components/atom/Card';
-import { memo } from 'react';
 
+import { Card } from '@/components/atom/Card'; import { useCoinStore } from '@/store/coinStore';
 interface CoinCardProps {
-  data: CoinResponseType;
+  coinId: string;
   index: number;
   currencyType: string;
 }
-const CoinCard = ({ data, index, currencyType }: CoinCardProps) => {
+const CoinCard = ({ coinId, index, currencyType }: CoinCardProps) => {
+  const data = useCoinStore(state => state.coinsObj[coinId]);
   return (
     <Card className=' w-[440px] h-[240px]'>
       <div className="absolute -right-10 -bottom-10 w-60 opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-700 rotate-12 group-hover:rotate-0">
@@ -45,4 +44,4 @@ const CoinCard = ({ data, index, currencyType }: CoinCardProps) => {
   )
 }
 
-export default memo(CoinCard)
+export default CoinCard

@@ -1,17 +1,18 @@
 import { TableCell, TableRow } from "@/components/atom/Table"
 import CoinData from "./CoinData"
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol"
-import type { CoinResponseType } from "../../types/coinResponseType";
-import { memo } from "react";
+import { useCoinStore } from "@/store/coinStore";
+
 
 interface CoinRowProps {
-  data: CoinResponseType
+  coinId: string
   index: number;
   currency: string;
 }
-const CoinRow = ({ data, index, currency }: CoinRowProps) => {
+const CoinRow = ({ coinId, index, currency }: CoinRowProps) => {
+  const data = useCoinStore((state => state.coinsObj[coinId]));
   return (
-    <TableRow key={index}>
+    <TableRow>
       <TableCell>
         {String(index + 1).padStart(3, '0')}
       </TableCell>
@@ -49,4 +50,4 @@ const CoinRow = ({ data, index, currency }: CoinRowProps) => {
   )
 }
 
-export default memo(CoinRow)
+export default CoinRow

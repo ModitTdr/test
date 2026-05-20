@@ -1,15 +1,13 @@
-import { useMemo } from "react";
 import { useCoinQuery } from "../hooks/useCoinQueries"
 import { Table, TableBody, TableEmptyState, TableHead, TableHeader, TableRow } from "@/components/atom/Table";
 import CoinRow from "../components/table/CoinRow";
-import type { CoinResponseType } from "../types/coinResponseType";
 import CoinCard from "../components/CoinCard";
+import { useCoinStore } from "@/store/coinStore";
 
 const Dashboard = () => {
-  const { data, isLoading, currency } = useCoinQuery();
-  const topData = useMemo(() => data?.slice(0, 3), [data]);
-
-  console.log('dashboard rendered');
+  const { isLoading, currency } = useCoinQuery();
+  const data = useCoinStore(state => state.coinIds);
+  const topData = data?.slice(0, 3);
 
   return (
     <section className="space-y-10 overflow-hidden">
@@ -20,18 +18,18 @@ const Dashboard = () => {
             text-[17vw] font-semibold font-sora
             bg-linear-to-b from-foreground from-25% via-foreground/5 via-60% to-background
             bg-clip-text bg-transparent text-transparent
-            absolute top-0 left-1/2 -translate-x-1/2 -translate-y-20
+            absolute top-0 left-1/2 -translate-x-1/2 lg:-translate-y-20
           "
         >
           Dashboard
         </h1>
-        <div className="flex justify-evenly items-center gap-4 pt-35">
+        <div className="flex justify-evenly items-center gap-4 pt-35 flex-wrap">
           {topData &&
-            topData.map((coin, index) => {
+            topData.map((coinId: string, index) => {
               return (
                 <CoinCard
-                  key={coin.id}
-                  data={coin}
+                  key={coinId}
+                  coinId={coinId}
                   index={index}
                   currencyType={currency}
                 />
@@ -54,18 +52,18 @@ const Dashboard = () => {
           </TableHeader>
           <TableBody>
             {data ? (
-              data.map((coin: CoinResponseType, index: number) => {
+              data.map((coinId: string, index: number) => {
                 return (
                   <CoinRow
-                    key={coin.id}
-                    data={coin}
+                    key={coinId}
+                    coinId={coinId}
                     index={index}
                     currency={currency}
                   />
                 )
               })
             ) : (
-              <TableEmptyState colSpan={3} isLoading={isLoading} />
+              <TableEmptyState colSpan={5} isLoading={isLoading} />
             )}
           </TableBody>
         </Table>

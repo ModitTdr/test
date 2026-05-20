@@ -1,5 +1,5 @@
 import Button from "@/components/atom/Button"
-import { Plus, Trash } from "lucide-react"
+import { Pencil, Plus, Trash } from "lucide-react"
 import { useState } from "react"
 import { AddCoinModal } from "../components/portfolio/addCoinModal"
 import { useQuery } from "@tanstack/react-query"
@@ -10,19 +10,30 @@ import { usePortfolioValue } from "../hooks/usePortfolioValues"
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/atom/Table"
 import DeleteCoinModal from "../components/portfolio/deleteCoinModal"
+import UpdateCoinModal from "../components/portfolio/updateCoinModal"
+import type { PortfolioItem } from "../types/coinPortfolio"
+import { useAuth } from "@/hooks/useAuth"
+
 
 const Portfolio = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState({
+    open: false,
+    coin: null,
+  });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState({
     open: false,
     id: null,
     coinName: null,
   });
 
+  const { user } = useAuth();
   const { data: portfolio, isLoading } = useQuery({
-    queryKey: ['portfolio'],
+    queryKey: ['portfolio', user?.uid],
     queryFn: getPortfolio,
+    enabled: !!user,
   })
+
   const { totalValue, prices, currency } = usePortfolioValue(portfolio);
 
   const handleDelete = (id: string, coinName: string) => {
@@ -32,6 +43,12 @@ const Portfolio = () => {
       coinName
     })
   }
+  const handleEdit = (coin: PortfolioItem) => {
+    setIsEditModalOpen({
+      open: true,
+      coin,
+    });
+  };
 
   return (
     <section className="p-6 md:p-10">
@@ -84,9 +101,25 @@ const Portfolio = () => {
                           <p className="font-medium">
                             {getCurrencySymbol(currency)}{holdingValue.toLocaleString()}
                           </p>
-                          <Button variant="ghost" size="icon" className="cursor-pointer text-red-500" onClick={() => handleDelete(coin.id, coin.name)}>
-                            <Trash size={18} />
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="cursor-pointer text-blue-500"
+                              onClick={() => handleEdit(coin)}
+                            >
+                              <Pencil size={18} />
+                            </Button>
+
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="cursor-pointer text-red-500"
+                              onClick={() => handleDelete(coin.id, coin.name)}
+                            >
+                              <Trash size={18} />
+                            </Button>
+                          </div>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -101,12 +134,31 @@ const Portfolio = () => {
       {isModalOpen && (
         <AddCoinModal onClose={() => setIsModalOpen(false)} />
       )}
-      {isDeleteModalOpen.open &&
-        <DeleteCoinModal
-          delState={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen({ open: false, id: null, coinName: null })}
-        />
+      {
+        isDeleteModalOpen.open &&
+        isDeleteModalOpen.coinName &&
+        isDeleteModalOpen.id && (
+          <DeleteCoinModal
+            delState={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen({ open: false, id: null, coinName: null })}
+          />
+        )
       }
+      {
+        isEditModalOpen.open &&
+        isEditModalOpen.coin && (
+          <UpdateCoinModal
+            coin={isEditModalOpen.coin}
+            onClose={() =>
+              setIsEditModalOpen({
+                open: false,
+                coin: null,
+              })
+            }
+          />
+        )
+      }
+
     </section>
   )
 }

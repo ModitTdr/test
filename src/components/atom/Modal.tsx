@@ -12,7 +12,7 @@ export const Modal = ({
   className,
 }: ModalProps) => {
   return createPortal(
-    <div className="absolute top-0 left-0 w-full h-screen">
+    <div className="fixed top-0 left-0 w-full h-screen">
       <div className="absolute inset-0 z-40 bg-black/50 backdrop-blur-sm" />
       <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
         <div className={twMerge(clsx("w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 shadow-2xl", className))}>

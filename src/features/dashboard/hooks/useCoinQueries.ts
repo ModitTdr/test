@@ -2,20 +2,22 @@ import { CurrencyContext } from "@/context/CurrencyContext";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { getCoinsList, searchCoins } from "../services/coinsServices";
+import { useCoinStore } from "@/store/coinStore";
 
 export const useCoinQuery = () => {
   const { currency } = useContext(CurrencyContext);
+  const setCoins = useCoinStore((state) => state.setCoins);
 
   const query = useQuery({
     queryKey: ['coins', currency],
-    queryFn: () => {
-      const data = getCoinsList(currency);
+    queryFn: async () => {
+      const data = await getCoinsList(currency);
+      setCoins(data)
       return data;
     },
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
     refetchInterval: 15000,
-    staleTime: 15000,
   })
 
   return {
